@@ -46,7 +46,22 @@ def custom():
 
 @app.route('/api/v1/custom', methods=['POST'])
 def custom_charge():
-  print(request.form)
+  print(request.POST)
+
+  token = request.POST['stripeToken']
+
+  try:
+    charge = stripe.Charge.create(
+      # in cents so 10 dollars
+      amount=1000,
+      currency='usd',
+      source='token',
+      description='example charge'
+    )
+  except stripe.error.CardError as e:
+    print(e)
+    pass
+
   return render_template('successful.html', amount='10')
 
 if __name__ == '__main__':
