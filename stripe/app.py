@@ -1,6 +1,6 @@
 # package to mask our environment variables
 import os
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify
 import stripe
 
 # dictionary for stripe keys
@@ -46,9 +46,9 @@ def custom():
 
 @app.route('/api/v1/custom', methods=['POST'])
 def custom_charge():
-  print(request.POST)
+  print(request.form)
 
-  token = request.POST['stripeToken']
+  token = request.form['stripeToken']
 
   try:
     charge = stripe.Charge.create(
@@ -63,6 +63,21 @@ def custom_charge():
     pass
 
   return render_template('successful.html', amount='10')
+
+@app.route('/save')
+def save():
+  return render_template('save_customer.html', key=stripe_keys['publishable_key'])
+
+@app.route('/api/v1/customer', methods=['POST'])
+def save_customer():
+  token = request.form['stripeToken']
+
+  customer = stripe.Customer.create(
+    source=token,
+    description='example customer'
+  )
+  # json api of saved customer
+  return jsonify(customer)
 
 if __name__ == '__main__':
   app.run(debug=True)

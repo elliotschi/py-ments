@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+{% block content %}
+<h1>Save Payment Info</h1>
+<form action="/api/v1/customer" method="POST">
+  <article>
+    <label>
+      <span>
+        Price is 5 USD
+      </span>
+    </label>
+  </article>
+<!-- @TODO: secure payment on front end => not a secure way to handle payments, because you can inspect the html -->
+  <script
+    src="https://checkout.stripe.com/checkout.js"
+    class="stripe-button"
+    data-key="{{ key }}"
+    data-description="Flask charge for demo app"
+    data-amount="500"
+    data-locale="USD"
+  ></script>
+</form>
+{% endblock %}
