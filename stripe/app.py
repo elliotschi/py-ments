@@ -39,5 +39,15 @@ def charge():
 
   return render_template('successful.html', amount=price)
 
+# get and post route for custom form
+@app.route('/custom')
+def custom():
+  return render_template('custom_form.html', key=stripe_keys['publishable_key'])
+
+@app.route('/api/v1/custom', methods=['POST'])
+def custom_charge():
+  print(request.form)
+  return render_template('successful.html', amount='10')
+
 if __name__ == '__main__':
   app.run(debug=True)
